@@ -1,5 +1,4 @@
-import React, { useState, createContext } from 'react';
-import MyCart from './MyCart';
+import React, { useState } from 'react';
 
 let myarray = [
     { name: "test1", color: "red", price: 10, size: 1, id: 1 },
@@ -10,11 +9,10 @@ let myarray = [
     { name: "test6", color: "pink", price: 60, size: 1, id: 6 },
 ];
 
-const Create = () => {
+const BackupAddtocart = () => {
     const [product, setProduct] = useState([]);
     const [error, setError] = useState(false);
-
-    const data1 = createContext();
+    const [visible, setVisible] = useState(false);
 
     let AddItem = (item) => {
         const match = product.find((items) => items.id == item.id);
@@ -54,23 +52,61 @@ const Create = () => {
         setError(false);
     }
 
+
     return (
         <>
-            {/* <Route path='/mycart' component={MyCart} /> */}
+            {visible ?
+                <div className='summary'>
+                    <h1 style={{ textAlign: "center", marginTop: '2rem' }}>Product Summary</h1>
+                    <table border={1} width="90%">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Product Quantity</th>
+                            <th>Per Item Price</th>
+                            <th>Total</th>
+                        </tr>
+                        {product.map((prdt, myindex) => (
+                            <tr >
+                                <td> {prdt.name} </td>
 
-            <h1 style={{ textAlign: "center" }}>Product here</h1>
-            <div className='head'>
-                {myarray.map((items, index) => {
-                    return (
-                        <div className='itemone'>
-                            <h2>Product{index}</h2>
-                            <h3>{items.name}</h3>
-                            <p>{items.price}</p>
-                            <p>{items.size}</p>
-                            <p>{items.color}</p>
-                            <button onClick={() => AddItem(items, index)} >Click</button>
-                        </div>);
-                })}
+                                <td >
+                                    <button onClick={() => Decrement(prdt.id)}>-</button>
+                                    {prdt.size}
+                                    <button onClick={() => Increment(prdt.id)}>+</button>
+                                </td>
+                                <td>{prdt.price}</td>
+                                <td>{prdt.price * prdt.size}</td>
+                                <td><button onClick={() => deleteProduct(prdt)}>X</button></td>
+                                {/* <td>grand total : {prdt.size * prdt.price}</td> */}
+                            </tr>
+                        ))}
+                    </table>
+                </div>
+                :
+                <div className='products'>
+                    <h1 style={{ textAlign: "center", marginTop: '2rem' }}>Product here</h1>
+                    <div className='head'>
+                        {myarray.map((items, index) => {
+                            return (
+                                <div className='itemone'>
+                                    <h2>Product{index}</h2>
+                                    <h3>{items.name}</h3>
+                                    <p>{items.price}</p>
+                                    <p>{items.size}</p>
+                                    <p>{items.color}</p>
+                                    <button onClick={() => AddItem(items, index)} >Click</button>
+                                </div>);
+                        })}
+                    </div>
+                </div>
+            }
+
+            <div className='buttons'>
+                {!visible ?
+                    <button onClick={() => setVisible(true)}> Cart</button>
+                    :
+                    <button onClick={() => setVisible(false)}> Add More Producst</button>
+                }
             </div>
             <div>
                 {error ? <h4 style={{ color: "red" }}>error</h4> : ''}
@@ -78,5 +114,5 @@ const Create = () => {
         </>
     )
 }
-export default Create;
-// export { data1 };
+
+export default BackupAddtocart

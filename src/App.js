@@ -1,5 +1,6 @@
 import './App.css';
 import './New.css';
+import Create from './Taveez/Create';
 // import NavBar from './Routes/NavBar';
 // import About from './Routes/About';
 // import Home from './Routes/Home';
@@ -10,12 +11,7 @@ import './New.css';
 function App() {
   return (
     <>
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/products" element={<Products />} />
-      </Routes>
+      <Create />
     </>
   )
 }
