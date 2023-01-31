@@ -1,28 +1,44 @@
 import React, { useState } from 'react';
 
 let myarray = [
-    { name: "test1", color: "red", price: 10, size: 1, id: 1 },
-    { name: "test2", color: "green", price: 20, size: 1, id: 2 },
-    { name: "test3", color: "blue", price: 30, size: 1, id: 3 },
-    { name: "test4", color: "yellow", price: 40, size: 1, id: 4 },
-    { name: "test5", color: "orange", price: 50, size: 1, id: 5 },
-    { name: "test6", color: "pink", price: 60, size: 1, id: 6 },
+    { name: "test1", color: "red", price: 10, size: 1, id: 1, isAddedtoCart: false },
+    { name: "test2", color: "green", price: 20, size: 1, id: 2, isAddedtoCart: false },
+    { name: "test3", color: "blue", price: 30, size: 1, id: 3, isAddedtoCart: false },
+    { name: "test4", color: "yellow", price: 40, size: 1, id: 4, isAddedtoCart: false },
+    { name: "test5", color: "orange", price: 50, size: 1, id: 5, isAddedtoCart: false },
+    { name: "test6", color: "pink", price: 60, size: 1, id: 6, isAddedtoCart: false },
 ];
-
 const BackupAddtocart = () => {
     const [product, setProduct] = useState([]);
     const [error, setError] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [delfromCart, setDelfromCart] = useState([]);
+    const [checkBtn, setCheckBtn] = useState(0);
 
-    let AddItem = (item) => {
+    let AddItem = (item, id) => {
+        //Adding Item in Cart
         const match = product.find((items) => items.id == item.id);
-        // console.log('first', match)
+        //Deleting Item Directly on button press
+        item.isAddedtoCart = true;
+        if (item.isAddedtoCart == true) {
+            let filtered = product.filter(myitem => myitem.id !== item.id);
+            setProduct([...filtered]);
+        };
         if (!match) {
             setProduct(prevState => ([...prevState, item]));
         }
-        if (match) {
-            setError(true)
+        //Toggling Button
+        const index = delfromCart.findIndex(items => items == item.id);
+        console.log("before",delfromCart);
+
+        if (index != -1) {
+            const filtered = delfromCart.filter(myitem => myitem !== item.id);
+
+            setDelfromCart([...filtered]);
+        } else {
+            setDelfromCart(prevState => [...prevState, item.id]);
         }
+
     }
     let Increment = (id) => {
         const findIndex = product.findIndex(item => item.id === id);
@@ -38,7 +54,7 @@ const BackupAddtocart = () => {
         if (findIndex2 !== -1) {
             const arr2 = [...product];
             if (arr2[findIndex2].size <= 1) {
-                alert("Product can't be Empty")
+                alert("Product can't be Empty");
             } else {
                 arr2[findIndex2].size = arr2[findIndex2].size - 1;
             }
@@ -51,8 +67,6 @@ const BackupAddtocart = () => {
         setProduct([...result]);
         setError(false);
     }
-
-
     return (
         <>
             {visible ?
@@ -65,23 +79,18 @@ const BackupAddtocart = () => {
                             <th>Per Item Price</th>
                             <th>Total</th>
                         </tr>
-                        {product.map((prdt, myindex) => (
-                            <tr >
-                                <td> {prdt.name} </td>
-
-                                <td >
-                                    <button onClick={() => Decrement(prdt.id)}>-</button>
-                                    {prdt.size}
-                                    <button onClick={() => Increment(prdt.id)}>+</button>
-                                </td>
-                                <td>{prdt.price}</td>
-                                <td>{prdt.price * prdt.size}</td>
-                                <td><button onClick={() => deleteProduct(prdt)}>X</button></td>
-                                {/* <td>grand total : {prdt.size * prdt.price}</td> */}
-                            </tr>
-                        ))}
-                    </table>
-                </div>
+                        {product.map((prdt) => {
+                            return (
+                                <tr >
+                                    <td> {prdt.name} </td>
+                                    <td ><button onClick={() => Decrement(prdt.id)} className="mybutton">-</button>
+                                        {prdt.size}
+                                        <button onClick={() => Increment(prdt.id)} className="mybutton">+</button>
+                                    </td><td>{prdt.price}</td>
+                                    <td>{prdt.price * prdt.size}</td>
+                                    <td><button onClick={() => deleteProduct(prdt)}>X</button></td></tr>)
+                        })}
+                    </table> <h3> GrandTotal : {product.reduce((a, b) => a + b.price * b.size, 0)}</h3 ></div>
                 :
                 <div className='products'>
                     <h1 style={{ textAlign: "center", marginTop: '2rem' }}>Product here</h1>
@@ -89,30 +98,28 @@ const BackupAddtocart = () => {
                         {myarray.map((items, index) => {
                             return (
                                 <div className='itemone'>
-                                    <h2>Product{index}</h2>
+                                    <h2>Product{items.id}</h2>
                                     <h3>{items.name}</h3>
-                                    <p>{items.price}</p>
-                                    <p>{items.size}</p>
-                                    <p>{items.color}</p>
-                                    <button onClick={() => AddItem(items, index)} >Click</button>
+                                    <p>P.Price {items.price}</p>
+                                    <p>P.Color {items.color}</p>
+                                    <button onClick={() => AddItem(items, index)}> {delfromCart.includes(items.id) ? "Del from cart " : "Add to cart"}</button >
                                 </div>);
                         })}
                     </div>
                 </div>
             }
-
             <div className='buttons'>
                 {!visible ?
-                    <button onClick={() => setVisible(true)}> Cart</button>
+                    <button onClick={() => setVisible(true)}> Cart({product.length})</button>
                     :
-                    <button onClick={() => setVisible(false)}> Add More Producst</button>
+                    <button onClick={() => setVisible(false)}> Back To Shopping </button>
                 }
             </div>
             <div>
-                {error ? <h4 style={{ color: "red" }}>error</h4> : ''}
+                {error ? <h4 style={{ color: "red" }}>Can't Add Same Item Twice </h4> : ''}
             </div>
         </>
     )
 }
 
-export default BackupAddtocart
+export default BackupAddtocart;
