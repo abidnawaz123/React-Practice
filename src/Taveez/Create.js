@@ -29,7 +29,7 @@ const BackupAddtocart = () => {
         }
         //Toggling Button
         const index = delfromCart.findIndex(items => items == item.id);
-        console.log("before",delfromCart);
+        console.log("before", delfromCart);
 
         if (index != -1) {
             const filtered = delfromCart.filter(myitem => myitem !== item.id);
@@ -38,7 +38,6 @@ const BackupAddtocart = () => {
         } else {
             setDelfromCart(prevState => [...prevState, item.id]);
         }
-
     }
     let Increment = (id) => {
         const findIndex = product.findIndex(item => item.id === id);
@@ -121,5 +120,4 @@ const BackupAddtocart = () => {
         </>
     )
 }
-
 export default BackupAddtocart;
