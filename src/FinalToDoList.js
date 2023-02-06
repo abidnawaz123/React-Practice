@@ -38,7 +38,6 @@ const Usingstate1 = () => {
     const editt = (ind) => {
         console.log(ind)
         let newedititem = empty.find((item2, myindex2) => {
-            // console.log(item2, myindex2)
             return myindex2 === ind;
         })
         setCount(newedititem);
